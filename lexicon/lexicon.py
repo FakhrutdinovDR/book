@@ -1,21 +1,27 @@
-MENU_COMMANDS: dict[str, str] = {'start': 'Привет, читатель!\n'
+MENU_COMMANDS: dict[str, str] = {'/start': 'Начать работу с ботом',
+                                 '/help': 'Справка по работе бота',
+                                 '/continue': 'Продолжить чтение',
+                                 '/bookmarks': 'Посмотреть список закладок',
+                                 '/beginning': 'Перейти в начало книги'}
+
+ANSWER_MENU_COMMANDS: dict[str, str] = {'/start': 'Привет, читатель!\n'
                                           '\n'
                                           'Это бот, в котором ты можешь причтать книгу '
                                           'Михаила Булгакова: Мастер и Маргарита\n'
                                           '\n'
                                           'Чтобы посмотреть список доступных команд нажми /help',
-                                 'help': 'Это бот-читалка:\n'
+                                 '/help': 'Это бот-читалка:\n'
                                          '\n'
                                          'Доступные команды:\n'
                                          '\n'
-                                         '/beginning - Перейти в начало книги\n'
-                                         '/continue - Продолжить чтение\n'
-                                         '/bookmarks - Посмотреть список закладок\n'
-                                         '/help - Справка по работе бота\n'
+                                         f'/beginning - {MENU_COMMANDS["/beginning"]}\n'
+                                         f'/continue - {MENU_COMMANDS["/continue"]}\n'
+                                         f'/bookmarks - {MENU_COMMANDS["/bookmarks"]}\n'
+                                         f'/help - {MENU_COMMANDS["/help"]}\n'
                                          '\n'
                                          'Чтобы сохранить закладку нажми на кнопку с номером страницы\n'
                                          '\n'
-                                         'Приятного чтения!'}
+                                         'Приятного чтения!',}
 
 OTHER_ANS: dict[str, str] = {'other': 'Я могу только дать прочитать тебе книгу, и дать инструкции /help'}
 
