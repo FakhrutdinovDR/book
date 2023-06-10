@@ -2,6 +2,8 @@ from aiogram import Router, F
 from aiogram.types import Message
 from lexicon.lexicon import ANSWER_MENU_COMMANDS
 from database.db import User, writeupdateusers, USERS
+from keyboards.pagination import create_pagination_keyboard
+from services.handling_book_getting import book
 
 router: Router = Router()
 
@@ -15,3 +17,7 @@ async def proccessingstart(message: Message):
 async def proccessinghelp(message: Message):
     await message.answer(text=ANSWER_MENU_COMMANDS['/help'])
 
+@router.message(F.text == '/beginning')
+async def proccessingbegin(message: Message):
+    kb = create_pagination_keyboard('backward', '1', 'forward')
+    await message.answer(text=book[1], reply_markup=kb)
