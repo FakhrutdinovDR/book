@@ -1,7 +1,7 @@
 import re
 import os
 
-BOOK_PATH = os.path.join(os.getcwd().strip('services'), 'books\Bulgakov.txt')
+BOOK_PATH = os.path.join(os.getcwd(), 'books\Bulgakov.txt')
 page_size = 1050
 book: dict[int, str] = {}
 
