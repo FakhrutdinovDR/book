@@ -1,7 +1,7 @@
 import re
 import os
 
-BOOK_PATH = os.path.join(os.getcwd(), 'books\Bulgakov.txt')
+BOOK_PATH = os.path.join(os.getcwd(), 'books/Bulgakov.txt')
 page_size = 1050
 book: dict[int, str] = {}
 
@@ -25,5 +25,5 @@ def prepare_book(path: str):
             generate_page = _get_part_text(books, start, page_size)
             book.setdefault(count_page, generate_page[0].lstrip())
 
-
+prepare_book(BOOK_PATH)
 
