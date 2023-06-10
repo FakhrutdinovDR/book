@@ -1,5 +1,8 @@
 from dataclasses import dataclass
+import pickle
 import os
+
+USERS = {}
 
 @dataclass()
 class User:
@@ -12,10 +15,13 @@ def writeupdateusers(usersdict: dict): # Обновление инфы о юзе
         pickle.dump(usersdict, file)
 
 def loadusersindict(): # Загрузка базы юзеров
-    usersdict = {}
     if os.path.exists('baseusers.pkl'):
         with open('baseusers.pkl', 'rb') as file:
-            data = pickle.load(file)
-            for key, value in data.items():
-                usersdict.setdefault(key, value)
-    return usersdict
+            try:
+                data = pickle.load(file)
+                for key, value in data.items():
+                    USERS.setdefault(key, value)
+            except:
+                pass
+
+loadusersindict()
