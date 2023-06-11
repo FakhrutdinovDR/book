@@ -5,7 +5,8 @@ MENU_COMMANDS: dict[str, str] = {'/start': 'Начать работу с бот�
                                  '/beginning': 'Перейти в начало книги'}
 
 BOOKMARK_COMMANDS = {'edit_bookmarks': 'РЕДАКТИРОВАТЬ',
-                     'cancel': 'ОТМЕНИТЬ',}
+                     'cancel': 'ОТМЕНИТЬ',
+                     'del': 'X'}
 
 ANSWER_MENU_COMMANDS: dict[str, str] = {'/start': 'Привет, читатель!\n'
                                           '\n'
