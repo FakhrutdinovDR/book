@@ -7,6 +7,7 @@ from services.handling_book_getting import book
 
 router: Router = Router()
 
+# Блок инициализациии работы с ботом и помощи
 @router.message(F.text == '/start')
 async def proccessingstart(message: Message):
     USERS.setdefault(str(message.from_user.id), User(message.from_user.id, set())) # Добавление в словарь юзера, если его нет еще
@@ -17,6 +18,7 @@ async def proccessingstart(message: Message):
 async def proccessinghelp(message: Message):
     await message.answer(text=ANSWER_MENU_COMMANDS['/help'])
 
+# Блок хендлеров по работе со страницей чтения
 @router.message(F.text == '/beginning')
 async def proccessingbegin(message: Message):
     user = USERS[str(message.from_user.id)]
@@ -36,3 +38,21 @@ async def proccesingforwardbutton(cb: CallbackQuery):
         kb = create_pagination_keyboard('backward', str(user.lastpage), 'forward')
         await cb.message.edit_text(text=text, reply_markup=kb)
     await cb.answer()
+
+@router.callback_query(F.data == 'backward')
+async def proccesingbackwardbutton(cb: CallbackQuery):
+    user = USERS[str(cb.from_user.id)]
+    if user.lastpage > 1:
+        user.lastpage -= 1
+        writeupdateusers(USERS)
+        text = book[user.lastpage]
+        kb = create_pagination_keyboard('backward', str(user.lastpage), 'forward')
+        await cb.message.edit_text(text=text, reply_markup=kb)
+    await cb.answer()
+
+@router.callback_query(F.data.isdigit())
+async def proccessingpagebutton(cb: CallbackQuery):
+    user = USERS[str(cb.from_user.id)]
+    user.bookmarks.add(user.lastpage)
+    writeupdateusers(USERS)
+    await cb.answer(text=f'Страница {user.lastpage} добавлена в закладки')
