@@ -1,5 +1,5 @@
 from aiogram import Router, F
-from aiogram.types import Message
+from aiogram.types import Message, CallbackQuery
 from lexicon.lexicon import ANSWER_MENU_COMMANDS
 from database.db import User, writeupdateusers, USERS
 from keyboards.pagination import create_pagination_keyboard
@@ -9,8 +9,8 @@ router: Router = Router()
 
 @router.message(F.text == '/start')
 async def proccessingstart(message: Message):
-    USERS.setdefault(str(message.from_user.id), User(message.from_user.id, set()))
-    writeupdateusers(USERS)
+    USERS.setdefault(str(message.from_user.id), User(message.from_user.id, set())) # Добавление в словарь юзера, если его нет еще
+    writeupdateusers(USERS) # Обновление файла с юзерами
     await message.answer(text=ANSWER_MENU_COMMANDS['/start'])
 
 @router.message(F.text == '/help')
@@ -19,5 +19,20 @@ async def proccessinghelp(message: Message):
 
 @router.message(F.text == '/beginning')
 async def proccessingbegin(message: Message):
+    user = USERS[str(message.from_user.id)]
     kb = create_pagination_keyboard('backward', '1', 'forward')
+    if user.lastpage != 1:
+        user.lastpage = 1
+    writeupdateusers(USERS)
     await message.answer(text=book[1], reply_markup=kb)
+
+@router.callback_query(F.data == 'forward')
+async def proccesingforwardbutton(cb: CallbackQuery):
+    user = USERS[str(cb.from_user.id)]
+    if user.lastpage < len(book):
+        user.lastpage += 1
+        writeupdateusers(USERS)
+        text = book[user.lastpage]
+        kb = create_pagination_keyboard('backward', str(user.lastpage), 'forward')
+        await cb.message.edit_text(text=text, reply_markup=kb)
+    await cb.answer()
