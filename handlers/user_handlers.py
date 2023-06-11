@@ -56,3 +56,10 @@ async def proccessingpagebutton(cb: CallbackQuery):
     user.bookmarks.add(user.lastpage)
     writeupdateusers(USERS)
     await cb.answer(text=f'Страница {user.lastpage} добавлена в закладки')
+
+# Хендлер для открытия последней страницы
+@router.message(F.text == '/continue')
+async def processing_continue_command(message: Message):
+    user = USERS[str(message.from_user.id)]
+    kb = create_pagination_keyboard('backward', str(user.lastpage), 'forward')
+    await message.answer(text=book[user.lastpage], reply_markup=kb)
