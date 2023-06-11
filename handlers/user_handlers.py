@@ -3,6 +3,8 @@ from aiogram.types import Message, CallbackQuery
 from lexicon.lexicon import ANSWER_MENU_COMMANDS
 from database.db import User, writeupdateusers, USERS
 from keyboards.pagination import create_pagination_keyboard
+from keyboards.bookmarks import create_bookmarks_kb, create_edit_bookmarks_kb
+from filters.filters import IsDigitCallbackData, IsDelBookmarkCallbackData
 from services.handling_book_getting import book
 
 router: Router = Router()
@@ -63,3 +65,17 @@ async def processing_continue_command(message: Message):
     user = USERS[str(message.from_user.id)]
     kb = create_pagination_keyboard('backward', str(user.lastpage), 'forward')
     await message.answer(text=book[user.lastpage], reply_markup=kb)
+
+# Блок по работе с закладками
+@router.message(F.text == '/bookmarks')
+async def processing_bookmarks(message: Message):
+    user = USERS[str(message.from_user.id)]
+    kb = create_bookmarks_kb(*user.bookmarks)
+    await message.answer(text='Список закладок:', reply_markup=kb)
+
+@router.callback_query(IsDigitCallbackData())
+async def proccessing_bookmarks_buttonpage(cb: CallbackQuery):
+    user = USERS[str(cb.from_user.id)]
+    user.lastpage = int(cb.data[:-1])
+    kb = create_pagination_keyboard('backward', str(user.lastpage), 'forward')
+    await cb.message.edit_text(text=book[user.lastpage], reply_markup=kb)
