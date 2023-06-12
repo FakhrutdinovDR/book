@@ -85,3 +85,10 @@ async def proccessing_bookmarks_buttonpage(cb: CallbackQuery):
 async def proccessing_cancel(cb: CallbackQuery):
    await cb.message.edit_text(text='/continue - продолжить чтение')
    await cb.answer()
+
+@router.callback_query(F.data == 'edit_bookmarks')
+async def proccessing_edit_bk(cb: CallbackQuery):
+    user = USERS[str(cb.from_user.id)]
+    kb = create_edit_bookmarks_kb(*user.bookmarks)
+    await cb.message.edit_text(text='Редактировать закладки', reply_markup=kb)
+    await cb.answer()
