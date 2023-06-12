@@ -79,3 +79,9 @@ async def proccessing_bookmarks_buttonpage(cb: CallbackQuery):
     user.lastpage = int(cb.data[:-1])
     kb = create_pagination_keyboard('backward', str(user.lastpage), 'forward')
     await cb.message.edit_text(text=book[user.lastpage], reply_markup=kb)
+    await cb.answer()
+
+@router.callback_query(F.data == 'cancel')
+async def proccessing_cancel(cb: CallbackQuery):
+   await cb.message.edit_text(text='/continue - продолжить чтение')
+   await cb.answer()
